@@ -1,0 +1,265 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>MeteoChvost</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="project">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+
+<script
+  src="https://code.jquery.com/jquery-3.4.1.js"
+  integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+  crossorigin="anonymous"></script>
+
+<script>
+  var endpoint = '/api/chart/data/' // Nastavim REST api url
+  var teplotaDoma = []
+  var teplotaVenku = []
+  var labels = []
+
+  $.ajax({ //  Pomoci AJAXu nactu data a vlozim do promenych
+    method: "GET",
+    url: endpoint,
+    success: function(data){
+      labels = data.labels
+      teplotaDoma = data.teplotadoma
+      teplotaVenku = data.teplotavenku
+      tlak = data.tlak
+      vetr = data.vetr
+      narazovyVetr = data.narazovyvitr
+      oxidco2 = data.co2
+      console.log(data.labels)
+      var ctx = document.getElementById('myChart'); 
+      var myChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+         labels: labels,
+         datasets: [{
+            label: '3h - Teplota doma C',
+            data: teplotaDoma,
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(255, 159, 64, 0.2)'
+              ],
+            }]
+      }
+      })
+      var ctx2 = document.getElementById('myChart2'); 
+      var myChart2 = new Chart(ctx2, {
+      type: 'line',
+      data: {
+         labels: labels,
+         datasets: [{
+            label: '3h - Teplota venku C',
+            data: teplotaVenku,
+            borderColor: [
+              'rgba(255,99,132,1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(255, 159, 64, 1)'
+              ],
+              borderWidth: 1
+            }]
+      }
+      })
+      var tlk = document.getElementById('tlak'); 
+      var tlak = new Chart(tlk, {
+      type: 'line',
+      data: {
+         labels: labels,
+         datasets: [{
+            label: '3h - Tlak hPa',
+            data: tlak,
+            borderColor: [
+              'rgba(255,99,132,1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(255, 159, 64, 1)'
+              ],
+              borderWidth: 1
+            }]
+      }
+      })
+      var vtr = document.getElementById('vetr'); 
+      var vetr = new Chart(vtr, {
+      type: 'line',
+      data: {
+         labels: labels,
+         datasets: [{
+            label: '3h - Rychlost vetru m/s',
+            data: vetr,
+            borderColor: [
+              'rgba(255,99,132,1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(255, 159, 64, 1)'
+              ],
+              borderWidth: 1
+            }]
+      }
+      })
+      var narazovyvitr = document.getElementById('narazovy'); 
+      var narazovy = new Chart(narazovyvitr, {
+      type: 'line',
+      data: {
+         labels: labels,
+         datasets: [{
+            label: '3h - Narazovy vetr m/s',
+            data: narazovyVetr,
+            borderColor: [
+              'rgba(255,99,132,1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(55, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(55, 159, 64, 1)'
+              ],
+              borderWidth: 1
+            }]
+      }
+      })
+      var oxid = document.getElementById('co2'); 
+      var oxiduhlicity = new Chart(oxid, {
+      type: 'line',
+      data: {
+         labels: labels,
+         datasets: [{
+            label: '3h - CO2 ppm',
+            data: oxidco2,
+            borderColor: [
+              'rgba(255,99,132,1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(55, 206, 86, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(153, 102, 255, 1)',
+              'rgba(55, 159, 64, 1)'
+              ],
+              borderWidth: 1
+            }]
+      }
+      })
+    },
+    error: function(error_data){
+      console.log("error")
+      console.log(error_data)
+    }
+  })
+
+
+</script>
+</head>
+<body>
+  {% if user.is_authenticated %}
+    <p>Hello {{user.username}}</p>
+   
+
+  {% else %}
+    <p>Nejsi zalogovan</p>
+
+  {% endif %}
+   <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+  <a class="navbar-brand" href="#">MeteoChvost</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Domu <span class="sr-only">(current)</span></a>
+      </li>
+
+
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Menu</a>
+        <div class="dropdown-menu" aria-labelledby="dropdown01">
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <a class="dropdown-item" href="#">Something else here</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Data</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="logout">Odhlasit</a>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="text" placeholder="Co hledat" aria-label="Search">
+      <button class="btn btn-secondary my-2 my-sm-0" type="submit">Hledat</button>
+    </form>
+  </div>
+</nav>
+
+<div class="container">
+<div class="float-left">
+
+<div class="card">
+  <div class="card-body">
+    <h2>Data z RPI</h2>  <!-- Nacte data z Raspberry pi a zobrazi -->
+    <h4><span class="badge badge-secondary">CAS: </span> {{vsechno.cas}}</h4>
+    <h4><span class="badge badge-secondary">TEPLOTA: </span> {{vsechno.teplota}} &#8451;</h4>
+    <h4><span class="badge badge-secondary">TLAK: </span> {{vsechno.tlak}} hPa</h4>
+    <h4><span class="badge badge-secondary">VLHKOST: </span> {{vsechno.vlhkost}} %</h4>
+    <h4><span class="badge badge-secondary">CO2: </span> {{vsechno.co2}} ppm</h4>
+
+
+    <h2>Data z Meteo</h2> <!-- Nacte data z Meteo stanice v Kunovicich zobrazi je -->
+    <h4><span class="badge badge-secondary">TEPLOTA-VENKOVNI: </span> {{mereni.9.4}} &#8451;</h4>
+    <h4><span class="badge badge-secondary">TEPLOTA-ZDANLIVA: </span> {{mereni.9.5}} &#8451;</h4>
+    <h4><span class="badge badge-secondary">ROSNY-BOD: </span> {{mereni.9.6}} &#8451;</h4>
+    <h4><span class="badge badge-secondary">VLHKOST-VENKOVNI: </span> {{mereni.9.7}} %</h4>
+    <h4><span class="badge badge-secondary">SRAZKY: </span> {{mereni.9.8}} mm</h4>
+    <h4><span class="badge badge-secondary">TLAK-VENKOVNI: </span> {{mereni.9.9}} hPa</h4>
+    <h4><span class="badge badge-secondary">SMER-VETRU: </span> {{mereni.9.10}} </h4>
+    <h4><span class="badge badge-secondary">RYCHLOST-VETRU: </span> {{mereni.9.11}} m/s</h4>
+    <h4><span class="badge badge-secondary">NARAZOVY-VITR </span> {{mereni.9.12}} m/s</h4>
+    
+
+    
+  </div>
+
+
+</div>
+</div>
+
+
+   
+<div class="float-left">
+
+    <div class="card">
+      <div class="card-body">
+        <canvas id="myChart" style="max-width: 500px;"></canvas>  <!-- canvas pro zobrazeni grafu -->
+        <canvas id="myChart2" style="max-width: 500px;"></canvas>  <!-- canvas pro zobrazeni grafu -->
+        <canvas id="tlak" style="max-width: 500px;"></canvas>  <!-- canvas pro zobrazeni grafu -->
+        <canvas id="vetr" style="max-width: 500px;"></canvas>  <!-- canvas pro zobrazeni grafu -->
+        <canvas id="narazovy" style="max-width: 500px;"></canvas>  <!-- canvas pro zobrazeni grafu -->
+        <canvas id="co2" style="max-width: 500px;"></canvas>  <!-- canvas pro zobrazeni grafu -->
+      </div>
+    </div>
+</div>    
+<div class="float-left">
+
+  <img src='{% static "image.jpg" %}' class="mx-auto d-block" style="width:50%"> 
+</div>    
+
+</body>
+</html>
